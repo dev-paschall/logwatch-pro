@@ -13,11 +13,11 @@ log(){
 }
 
 info(){
-    log "INFO" "$1"
+    log "INFO" "$1" >&2
 }
 
 warn(){
-    log "WARN" "$1"
+    log "WARN" "$1" >&2
 }
 
 error(){

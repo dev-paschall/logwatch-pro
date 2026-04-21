@@ -3,3 +3,4 @@ logs/*.log
 reports/*.txt
 reports/*.html
 *.bak
+helper
