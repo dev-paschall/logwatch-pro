@@ -18,7 +18,14 @@ get_errors(){
 }
 
 get_recent_errors(){
-    local N=$1
+    local default_N=5
+    local N="${1:-$default_N}"
+
+    if [[ ! "$N" =~ ^[0-9]+$ ]]; then
+        error "Error: Argument must be a positive integer." >&2
+        exit 1
+    fi
+
     get_errors | tail -n "$N"
 }
 

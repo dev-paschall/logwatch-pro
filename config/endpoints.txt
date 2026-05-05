@@ -1,4 +1,4 @@
-https://httpbin.org/status/200
+https://google.com
+https://github.com
 https://httpbin.org/status/404
 https://httpbin.org/status/500
-https://httpbin.org/delay/2

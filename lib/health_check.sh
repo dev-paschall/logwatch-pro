@@ -12,36 +12,43 @@ check_endpoint(){
     local url="$1"
 
     local status_code
-    status_code=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 "$url")
+    status_code=$(curl -L -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 "$url" || true)
 
     if [[ "$status_code" == 2[0-9][0-9] ]]; then
-        (( up++ ))
         info "Endpoint up: $url ($status_code)"
         echo "[UP] $url ($status_code)"
 
     elif [[ "$status_code" ==  000 ]]; then
         error "Endpoint timeout: $url ($status_code)"
         echo "[TIMEOUT] $url ($status_code)"
+
     else
-        (( down++ ))
         warn "Endpoint down: $url ($status_code)"
         echo "[DOWN] $url ($status_code)"
     fi
 }
 
 check_all_endpoints(){
-    up=0
-    down=0
-    total=0
+    local up=0 down=0 total=0
+    local result url
 
     if [[ -f "$ENDPOINTS_FILE" ]]; then
         while IFS= read -r url || [[ -n "$url" ]]; do
             [[ -z "$url" ]] || [[ "$url" =~ ^# ]] && continue
-            check_endpoint "$url"
-            (( total++ ))
+            result=$(check_endpoint "$url")
+            echo "$result"
+
+            if [[ "$result" == \[UP\]* ]]; then
+                (( up++ )) || true
+            else
+                (( down++ )) || true
+            fi
+
+            (( total++ )) || true
         done < "$ENDPOINTS_FILE"
+
     else
-        error "Error: $ENDPOINTS_FILE not found."
+        error "Endpoints file $ENDPOINTS_FILE not found."
         exit 1
     fi
 
