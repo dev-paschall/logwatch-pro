@@ -17,23 +17,24 @@ show_help(){
 Usage: logwatch.sh [OPTIONS]
 
 Options:
-  --report        Generate full report (log analysis + health checks)
-  --parse-only    Run log analysis only (no health checks)
-  --health-only   Run health checks only (no log analysis)
-  --dry-run       Show what would run, without executing
-  --help          Show this help message
+  --report|-r         Generate full report (log analysis + health checks)
+  --parse-only|-p     Run log analysis only (no health checks)
+  --health-only|-h    Run health checks only (no log analysis)
+  --dry-run|-d        Show what would run, without executing
+  --help              Show this help message
 EOF
 }
+
 
 main(){
     local action=""
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --report)       action="report";;
-            --parse-only)   action="parse-only";;
-            --health-only)  action="health-only";;
-            --dry-run)      DRY_RUN=true;;
+            --report|-r)       action="report";;
+            --parse-only|-p)   action="parse-only";;
+            --health-only|-h)  action="health-only";;
+            --dry-run|-d)      DRY_RUN=true;;
             --help)         show_help; exit 0;;
             *)              error "Unknown option: $1"; exit 1;;
         esac
@@ -47,7 +48,7 @@ main(){
 
     case "$action" in
         report)         generate_report;;
-        parse-only)     summarize_levels; get_recent_errors 5;;
+        parse-only)     summarize_levels; get_recent_errors;;
         health-only)    check_all_endpoints;;
         "")             show_help; exit 0;;
         *)              error "Unknown action: $action"; exit 1;;
