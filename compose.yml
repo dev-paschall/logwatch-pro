@@ -1,0 +1,9 @@
+services:
+  logwatch:
+    build: .
+    container_name: logwatch-pro
+    volumes:
+      # mount system logs (Read-Only)
+      - ./logs/app.log:/app/logs/app.log:ro
+      # mount the report output folder (Read-Write)
+      - ./reports:/app/reports

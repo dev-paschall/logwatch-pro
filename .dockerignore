@@ -1,0 +1,6 @@
+.env
+.git
+tests/
+logs/
+reports/
+helper
